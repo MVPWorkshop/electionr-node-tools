@@ -350,6 +350,9 @@ async function sendTransaction (privateKey, contract, publicKey, nonce, podHash,
 
 async function checkIfExists (event) {
     const tx = await web3.eth.getTransactionReceipt(event.transactionHash);
+    if (!tx) {
+        return false;
+    }
 
     return tx.blockNumber === event.blockNumber;
 }

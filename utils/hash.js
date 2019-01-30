@@ -44,6 +44,6 @@ function calculateLowestHash (pubKey, nonce, contractAddr, time) {
             }
         }
     } catch (err) {
-        console.log('aaaa', err.stack);
+        logger.error(err.stack);
     }
 }

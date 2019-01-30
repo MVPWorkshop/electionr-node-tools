@@ -379,7 +379,6 @@ async function cosmosTxHandler (event, publicKey, legalerNodeUrl) {
         while (currentBlockNumber - event.blockNumber < 20) {
             await sleep(5000);
             currentBlockNumber = await web3.eth.getBlockNumber();
-            console.log(currentBlockNumber, event.blockNumber);
         }
 
         if (await transactions.checkIfExists(event)) {
