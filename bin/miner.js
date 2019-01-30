@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
+const program = require('commander');
+
+
 const {
     hash,
     transactions,
-    validations
+    validations,
+    logger,
 } = require('../utils');
-
-const program = require('commander');
 
 program
     .version('0.0.1', '-v, --version')
@@ -21,7 +23,7 @@ program
     .parse(process.argv);
 
 if (!program.publicKey || !program.contract || !program.time || !program.privateKey || !program.provider || !program.gasPrice) {
-    console.log('Something is mising!');
+    console.log('Something is missing!');
     console.log('  Try: $ miner --help');
 } else if (!validations.validatePublicKey(program.publicKey)) {
     console.log('Bad public key!');
@@ -30,23 +32,27 @@ if (!program.publicKey || !program.contract || !program.time || !program.private
     console.log('Bad private key!');
     console.log('  Try: $ miner --help');
 } else if (!validations.validateAddr(program.contract)) {
-    console.log('Not ethereum address!');
+    console.log('Not ethereum account!');
     console.log('  Try: $ miner --help');
 } else if (!validations.validateTime(program.time)) {
     console.log('Not a number!');
     console.log('  Try: $ miner --help');
-} else if (!validations.validateNonce(program.nonce)) {
+} else if (program.nonce && !validations.validateNumber(program.nonce)) {
     console.log('Nonce must be a number!');
     console.log('  Try: $ miner --help');
 } else if (!validations.validateProvider(program.provider)) {
     console.log('Bad provider url!');
     console.log('  Try: $ miner --help');
-} else {
-    transactions.initializeProviders(program.provider);
-    startMining(program.privateKey, program.publicKey, program.nonce, program.contract, program.time, program.gasPrice,program.hash);
+} else if (program.hash && !validations.validateHash(program.hash)) {
+    console.log('Bad hash!');
+    console.log('  Try: $ miner --help');
+}  else {
+    transactions.initializeProviders(program.provider, program.contract);
+    startMining(program.privateKey, program.publicKey, program.nonce, program.contract, program.time, program.gasPrice, program.hash);
 }
 
 async function startMining(privateKey, publicKey, nonce = 0, contract, time, gasPrice, minPoDHash = '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff') {
+    logger.info('Starting miner...');
     let minHash = minPoDHash || hash.calculateHash(publicKey, nonce, contract);
     let minNonce = nonce;
 
@@ -59,9 +65,12 @@ async function startMining(privateKey, publicKey, nonce = 0, contract, time, gas
 
             const tx = await transactions.sendTransaction(privateKey, contract, publicKey, data.nonce, data.hash, gasPrice);
 
-            console.log(data.nonce, data.hash, tx.transactionHash); // @TODO: better logging
+            if (tx) {
+                logger.info(`Successfully mined and sent transaction to the Election contract - PoD hash: ${data.hash} PoD nonce: ${data.nonce} - Ethereum transaction hash: ${tx.transactionHash}`);
+            }
         } else {
-            minNonce++;
+            logger.info(`Successfully mined new PoD hash: ${data.hash} with nonce ${data.nonce} but it is not smaller then ${minHash}`);
+            minNonce = data.currentNonce + 1;
         }
     }
 }

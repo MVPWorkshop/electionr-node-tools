@@ -3,15 +3,16 @@
 const Web3 = require('web3');
 const url = require('url');
 
-const privateKeyReqExp = new RegExp(/^[a-f0-9]{64}$/i);
+const hex32bytes = new RegExp(/^[A-Fa-f0-9]{64}$/i);
 
 module.exports = {
     validateAddr,
-    validateNonce,
+    validateNumber,
     validatePublicKey,
     validateTime,
     validatePrivateKey,
-    validateProvider
+    validateProvider,
+    validateHash,
 };
 
 function validatePublicKey (publicKey) { // @TODO: implemenet correct publicKey validation algorithm
@@ -26,20 +27,24 @@ function validateTime (ts) {
     return !isNaN(ts);
 }
 
-function validateNonce (nonce) {
+function validateNumber (nonce) {
     return !isNaN(nonce);
 }
 
 function validatePrivateKey (privateKey) {
-    return privateKeyReqExp.test(privateKey);
+    return hex32bytes.test(privateKey);
 }
 
 function validateProvider (provider) {
     try {
-        const myURl = url.parse(provider);
+        url.parse(provider);
         return true;
     } catch (err) {
         console.log(err);
         return false;
     }
+}
+
+function validateHash(hash) {
+    return hex32bytes.test(hash);
 }

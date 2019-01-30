@@ -1,5 +1,6 @@
 'use strict';
 
+const Queue = require('better-queue');
 const Web3 = require('web3');
 const abi = [
     {
@@ -298,58 +299,93 @@ const abi = [
         "type": "function",
         "signature": "0x71e7708a"
     }
-];
+]; // @TODO: seperate file
 
+const cosmos = require('./cosmos');
 const logger = require('./logger');
+const transactions = require('./transactions');
 
-var web3;
-var electionContract;
+const sleep = (waitTimeInMs) => new Promise(resolve => setTimeout(resolve, waitTimeInMs));
+
+let web3;
+let electionContract;
+
+const queue = new Queue(async (args, cb) => {
+    const { event, publicKey, legalerNodeUrl } = args;
+    await cosmosTxHandler(event, publicKey, legalerNodeUrl);
+    cb();
+}, {
+    concurrent: 1
+});
 
 module.exports = {
-    sendTransaction,
-    initializeProviders,
-    checkIfExists
+    initializeWatcher,
+    start,
 };
 
-function initializeProviders (provider, contract) {
-    web3 = new Web3(provider);
+function initializeWatcher (provider, contract) {
+    web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
     electionContract = new web3.eth.Contract(abi, contract);
+
+    transactions.initializeProviders(provider, contract);
 }
 
-async function sendTransaction (privateKey, contract, publicKey, nonce, podHash, gasPrice) {
-    if (web3) {
-        try {
-            const account = await web3.eth.accounts.privateKeyToAccount(privateKey);
-            const ethNonce = await web3.eth.getTransactionCount(account.address);
+async function start (publicKey, legalerNodeUrl, blocknumber, contract, provider) {
+    web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
+    electionContract = new web3.eth.Contract(abi, contract);
 
-            const data = electionContract.methods.electMe(publicKey, nonce, podHash).encodeABI();
-            const singedTx = await account.signTransaction({
-                to: contract,
-                nonce: ethNonce,
-                data: data,
-                gasPrice: gasPrice,
-                gasLimit: 8000000
-            });
+    transactions.initializeProviders(provider, contract);
 
-            return await web3.eth.sendSignedTransaction(singedTx.rawTransaction);
-        } catch (err) {
-            if (err.stack.includes('revert')) {
-                console.log('Lower hash already elected! Lower your starting --hash parametar and start again');
-                console.log('Miner will now exit...');
-                process.exit(1);
-            } else if (err.stack.includes('out of gas')) {
-                console.log('Hash submitted is to big for contract to process...');
-                console.log(`Try to mine lower hash than ${podHash}!`);
-                process.exit(1);
-            } else {
-                logger.error(err.stack);
-            }
+    logger.info(`Started watching transaction from ethereum node from block: ${blocknumber}`);
+
+    electionContract.getPastEvents('GenesisValidatorSet', {
+        fromBlock: +blocknumber
+    }, (error, events) => {
+        for (let i = 0; i < events.length; i++) {
+            queue.push({ event: events[i], publicKey, legalerNodeUrl });
         }
-    }
+    });
+
+    electionContract.getPastEvents('NewValidatorsSet', {
+        fromBlock: +blocknumber
+    }).then((events) => {// add to storage
+        for (let i = 0; i < events.length; i++) {
+            queue.push({ event: events[i], publicKey, legalerNodeUrl });
+        }
+    });
+
+    electionContract.events.GenesisValidatorSet({
+        fromBlock: +blocknumber
+    }).on('data', (event) => {// add to storage
+        queue.push({event, publicKey, legalerNodeUrl});
+    });
+
+    electionContract.events.NewValidatorsSet({
+        fromBlock: +blocknumber
+    }).on('data', (event) => {// add to storage
+        queue.push({event, publicKey, legalerNodeUrl});
+    });
+
+    // cosmos network nonce and transaction signing??
+    // is it necessary to have queue for cosmos
 }
 
-async function checkIfExists (event) {
-    const tx = await web3.eth.getTransactionReceipt(event.transactionHash);
+async function cosmosTxHandler (event, publicKey, legalerNodeUrl) {
+    try {
+        let currentBlockNumber = await web3.eth.getBlockNumber();
 
-    return tx.blockNumber === event.blockNumber;
+        logger.info(`Handling ethereum event: ${event.event} with transaction hash: ${event.transactionHash}`);
+
+        while (currentBlockNumber - event.blockNumber < 20) {
+            await sleep(5000);
+            currentBlockNumber = await web3.eth.getBlockNumber();
+            console.log(currentBlockNumber, event.blockNumber);
+        }
+
+        if (await transactions.checkIfExists(event)) {
+            cosmos.sendToLegalerBC(publicKey, event, legalerNodeUrl);
+        }
+    } catch (err) {
+        logger.error(err.stack);
+    }
 }

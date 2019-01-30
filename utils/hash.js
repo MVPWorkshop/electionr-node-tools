@@ -21,24 +21,29 @@ function calculateHash (pubKey, nonce, contractAddr) {
 }
 
 function calculateLowestHash (pubKey, nonce, contractAddr, time) {
-    let minHash = calculateHash(pubKey, nonce, contractAddr);
-    let minNonce = nonce;
-    let newNonce = nonce;
-    const currentTime = Math.floor(+new Date() / 1000);
+    try {
+        let minHash = calculateHash(pubKey, nonce, contractAddr);
+        let minNonce = nonce;
+        let newNonce = nonce;
+        const currentTime = Math.floor(+new Date() / 1000);
 
-    while (true) {
-        newNonce++;
-        let newHash = calculateHash(pubKey, newNonce, contractAddr);
-        if (newHash < minHash) {
-            minHash = newHash;
-            minNonce = newNonce;
-        }
+        while (true) {
+            newNonce++;
+            let newHash = calculateHash(pubKey, newNonce, contractAddr);
+            if (newHash < minHash) {
+                minHash = newHash;
+                minNonce = newNonce;
+            }
 
-        if (Math.floor(+new Date() / 1000) - currentTime <= time * 60) {
-            return {
-                nonce: minNonce,
-                hash: minHash
+            if (Math.floor(+new Date() / 1000) - currentTime >= time * 60) {
+                return {
+                    nonce: minNonce,
+                    hash: minHash,
+                    currentNonce: newNonce,
+                }
             }
         }
+    } catch (err) {
+        console.log('aaaa', err.stack);
     }
 }
