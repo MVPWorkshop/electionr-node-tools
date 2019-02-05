@@ -15,27 +15,27 @@ module.exports = {
     validateHash,
 };
 
-function validatePublicKey (publicKey) { // @TODO: implemenet correct publicKey validation algorithm
+function validatePublicKey(publicKey) { // @TODO: implemenet correct publicKey validation algorithm
     return true;
 }
 
-function validateAddr (address) {
+function validateAddr(address) {
     return Web3.utils.isAddress(address);
 }
 
-function validateTime (ts) {
+function validateTime(ts) {
     return !isNaN(ts);
 }
 
-function validateNumber (nonce) {
+function validateNumber(nonce) {
     return !isNaN(nonce);
 }
 
-function validatePrivateKey (privateKey) {
+function validatePrivateKey(privateKey) {
     return hex32bytes.test(privateKey);
 }
 
-function validateProvider (provider) {
+function validateProvider(provider) {
     try {
         url.parse(provider);
         return true;

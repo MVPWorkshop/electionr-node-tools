@@ -308,15 +308,16 @@ var electionContract;
 module.exports = {
     sendTransaction,
     initializeProviders,
-    checkIfExists
+    checkIfExists,
+    getBlockTS,
 };
 
-function initializeProviders (provider, contract) {
+function initializeProviders(provider, contract) {
     web3 = new Web3(provider);
     electionContract = new web3.eth.Contract(abi, contract);
 }
 
-async function sendTransaction (privateKey, contract, publicKey, nonce, podHash, gasPrice) {
+async function sendTransaction(privateKey, contract, publicKey, nonce, podHash, gasPrice) {
     if (web3) {
         try {
             const account = await web3.eth.accounts.privateKeyToAccount(privateKey);
@@ -348,11 +349,16 @@ async function sendTransaction (privateKey, contract, publicKey, nonce, podHash,
     }
 }
 
-async function checkIfExists (event) {
+async function checkIfExists(event) {
     const tx = await web3.eth.getTransactionReceipt(event.transactionHash);
     if (!tx) {
         return false;
     }
 
     return tx.blockNumber === event.blockNumber;
+}
+
+async function getBlockTS(blocknumber) {
+    const block = await web3.eth.getBlock(blocknumber);
+    return block.timestamp;
 }

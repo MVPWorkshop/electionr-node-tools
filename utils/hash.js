@@ -12,15 +12,15 @@ module.exports = {
     calculateLowestHash
 };
 
-function calculateHash (pubKey, nonce, contractAddr) {
+function calculateHash(pubKey, nonce, contractAddr) {
     const sum = BigNumber(pubKey).plus(BigNumber(nonce)).plus(BigNumber(web3.utils.hexToNumberString(contractAddr)));
     return '0x' + abi.soliditySHA256(
-        [ "uint256" ],
-        [ sum.toFixed() ]
+        ["uint256"],
+        [sum.toFixed()]
     ).toString('hex');
 }
 
-function calculateLowestHash (pubKey, nonce, contractAddr, time) {
+function calculateLowestHash(pubKey, nonce, contractAddr, time) {
     try {
         let minHash = calculateHash(pubKey, nonce, contractAddr);
         let minNonce = nonce;

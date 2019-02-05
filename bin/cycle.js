@@ -10,10 +10,10 @@ const {
 program
     .version('0.0.1', '-v, --version')
     .option('-p, --publicKey [value]', 'mandatory - your ed25519 public key')
-    .option('-c, --contract [address]', 'mandatory - election contract address wheir you want to submit your PoD hash')
+    .option('-c, --contract [address]', 'mandatory - election contract address')
     .option('-w, --provider [url]', 'mandatory - Url to the ethereum node')
     .option('-l, --legalerNode [url]', 'mandatory - Url to the Legaler node')
-    .option('-b, --blocknumber', 'mandatory - Starting block of event lisening')
+    .option('-b, --blocknumber', 'mandatory - Starting block of event listening')
     .parse(process.argv);
 
 if (!program.publicKey || !program.contract || !program.provider) {

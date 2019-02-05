@@ -311,7 +311,7 @@ let web3;
 let electionContract;
 
 const queue = new Queue(async (args, cb) => {
-    const { event, publicKey, legalerNodeUrl } = args;
+    const {event, publicKey, legalerNodeUrl} = args;
     await cosmosTxHandler(event, publicKey, legalerNodeUrl);
     cb();
 }, {
@@ -321,16 +321,17 @@ const queue = new Queue(async (args, cb) => {
 module.exports = {
     initializeWatcher,
     start,
+    checkIfGenesis,
 };
 
-function initializeWatcher (provider, contract) {
+function initializeWatcher(provider, contract) {
     web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
     electionContract = new web3.eth.Contract(abi, contract);
 
     transactions.initializeProviders(provider, contract);
 }
 
-async function start (publicKey, legalerNodeUrl, blocknumber, contract, provider) {
+async function start(publicKey, legalerNodeUrl, blocknumber, contract, provider) {
     web3 = new Web3(new Web3.providers.WebsocketProvider(provider));
     electionContract = new web3.eth.Contract(abi, contract);
 
@@ -342,35 +343,51 @@ async function start (publicKey, legalerNodeUrl, blocknumber, contract, provider
         fromBlock: +blocknumber
     }, (error, events) => {
         for (let i = 0; i < events.length; i++) {
-            queue.push({ event: events[i], publicKey, legalerNodeUrl });
+            queue.push({event: events[i], publicKey, legalerNodeUrl});
         }
     });
 
     electionContract.getPastEvents('NewValidatorsSet', {
         fromBlock: +blocknumber
-    }).then((events) => {// add to storage
+    }).then((events) => {
         for (let i = 0; i < events.length; i++) {
-            queue.push({ event: events[i], publicKey, legalerNodeUrl });
+            queue.push({event: events[i], publicKey, legalerNodeUrl});
         }
     });
 
     electionContract.events.GenesisValidatorSet({
         fromBlock: +blocknumber
-    }).on('data', (event) => {// add to storage
+    }).on('data', (event) => {
         queue.push({event, publicKey, legalerNodeUrl});
     });
 
     electionContract.events.NewValidatorsSet({
         fromBlock: +blocknumber
-    }).on('data', (event) => {// add to storage
+    }).on('data', (event) => {
         queue.push({event, publicKey, legalerNodeUrl});
     });
-
-    // cosmos network nonce and transaction signing??
-    // is it necessary to have queue for cosmos
 }
 
-async function cosmosTxHandler (event, publicKey, legalerNodeUrl) {
+async function checkIfGenesis(blocknumber) {
+    return new Promise(async (resolve, reject) => {
+        const currentBlockNumber = await web3.eth.getBlockNumber();
+
+        electionContract.getPastEvents('GenesisValidatorSet', {
+            fromBlock: +blocknumber,
+            toBlock: currentBlockNumber - 20
+        }, async (error, events) => {
+            if (error) {
+                reject(error);
+            } else {
+                web3.currentProvider.connection.close();
+                await cosmos.generateGenesis(events[0]);
+                resolve();
+            }
+        });
+    });
+}
+
+async function cosmosTxHandler(event, publicKey, legalerNodeUrl) {
     try {
         let currentBlockNumber = await web3.eth.getBlockNumber();
 

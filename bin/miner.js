@@ -14,7 +14,7 @@ program
     .version('0.0.1', '-v, --version')
     .option('-p, --publicKey [value]', 'mandatory - your ed25519 public key')
     .option('-s, --privateKey [value]', 'mandatory - your private key for sending lowest PoD hash to ethereum') // @TODO: dont let it stay in system trace
-    .option('-c, --contract [address]', 'mandatory - election contract address wheir you want to submit your PoD hash')
+    .option('-c, --contract [address]', 'mandatory - election contract address where you want to submit your PoD hash')
     .option('-n, --nonce [value]', '{default = 0} - Starting nonce when calculating PoD hash')
     .option('-h, --hash [value]', '{default = 0xfff...} - Send transaction only if hash lower than this value')
     .option('-t, --time [value]', 'mandatory - minimum time in minutes for single transaction to be fired') // todo: better explanation

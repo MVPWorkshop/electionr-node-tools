@@ -10,7 +10,7 @@ module.exports = winston.createLogger({
             humanReadableUnhandledException: true,
             format: winston.format.combine(
                 winston.format.timestamp(),
-                winston.format.label({ label: 'legalerTools' }),
+                winston.format.label({label: 'legalerTools'}),
                 winston.format.colorize(),
                 winston.format.printf(info => {
                     return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
