@@ -1,0 +1,1 @@
+{"base_req":{"from":"123213","chain_id":"legaler-chain"},"cycle_number":"0","elected_validators":[{"operator_address":"1111","consensus_pubkey":"1234436","place":1},{"operator_address":"2222","consensus_pubkey":"1234437","place":2},{"operator_address":"3333","consensus_pubkey":"1234438","place":3}]}

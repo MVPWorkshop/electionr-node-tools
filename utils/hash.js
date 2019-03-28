@@ -1,23 +1,22 @@
 'use strict';
 
-const abi = require('ethereumjs-abi');
-const BigNumber = require('bignumber.js');
-
-
 const Web3 = require('web3');
-const web3 = new Web3();
+let web3;
+
+const logger = require('./logger');
 
 module.exports = {
+    initializeProviders,
     calculateHash,
     calculateLowestHash
 };
 
+function initializeProviders(provider) {
+    web3 = new Web3(provider);
+}
+
 function calculateHash(pubKey, nonce, contractAddr) {
-    const sum = BigNumber(pubKey).plus(BigNumber(nonce)).plus(BigNumber(web3.utils.hexToNumberString(contractAddr)));
-    return '0x' + abi.soliditySHA256(
-        ["uint256"],
-        [sum.toFixed()]
-    ).toString('hex');
+    return web3.utils.soliditySha3(pubKey, nonce, contractAddr)
 }
 
 function calculateLowestHash(pubKey, nonce, contractAddr, time) {

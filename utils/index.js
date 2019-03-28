@@ -13,5 +13,5 @@ module.exports = {
     validations,
     watcher,
     cosmos,
-    logger
+    logger,
 };

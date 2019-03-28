@@ -1,9 +1,10 @@
 'use strict';
 
 const Web3 = require('web3');
+let web3;
 const url = require('url');
 
-const hex32bytes = new RegExp(/^[A-Fa-f0-9]{64}$/i);
+const hex32bytes = new RegExp(/^(0x)?[A-Fa-f0-9]{64}$/i);
 
 module.exports = {
     validateAddr,
@@ -13,9 +14,19 @@ module.exports = {
     validatePrivateKey,
     validateProvider,
     validateHash,
+    validateOperatorAddress,
+    validateCosmosPrivateKey
 };
 
+function validateCosmosPrivateKey(privateKey) { // @TODO: implemenet correct publicKey validation algorithm
+    return true;
+}
+
 function validatePublicKey(publicKey) { // @TODO: implemenet correct publicKey validation algorithm
+    return true;
+}
+
+function validateOperatorAddress(oprAddr) { // @TODO: implemenet correct publicKey validation algorithm
     return true;
 }
 

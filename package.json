@@ -2,29 +2,27 @@
   "name": "legaler-node-tools",
   "version": "0.0.1",
   "description": "",
-  "main": "",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/MVPWorkshop/legaler-node-tools.git"
-  },
-  "author": "",
+  "repository": "git+https://github.com/MVPWorkshop/legaler-node-tools.git",
+  "author": "filip.petroviccc <filip.petroviccc@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/MVPWorkshop/legaler-node-tools/issues"
   },
   "homepage": "https://github.com/MVPWorkshop/legaler-node-tools#readme",
   "dependencies": {
-    "axios": "^0.18.0",
-    "better-queue": "^3.8.10",
-    "bignumber.js": "^8.0.2",
-    "commander": "^2.19.0",
-    "ethereumjs-abi": "^0.6.6",
-    "stellar-base": "^0.10.0",
-    "url": "^0.11.0",
-    "web3": "^1.0.0-beta.37",
-    "winston": "^3.2.0"
+    "axios": "0.18.0",
+    "better-queue": "3.8.10",
+    "bignumber.js": "8.0.2",
+    "commander": "2.19.0",
+    "ethereumjs-abi": "0.6.6",
+    "shelljs": "0.8.3",
+    "stellar-base": "0.10.0",
+    "url": "0.11.0",
+    "web3": "1.0.0-beta.37",
+    "winston": "3.2.0"
   }
 }
