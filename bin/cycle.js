@@ -4,23 +4,25 @@ const program = require('commander');
 
 const {
     validations,
-    watcher
+    watcher,
+    hash
 } = require('../utils');
 
 program
     .version('0.0.1', '-v, --version')
-    .option('-p, --publicKey [value]', 'mandatory - your ed25519 public key')
+    .option('-f, --from [value]', 'mandatory - your account key e.g. "cosmos..."')
+    .option('-p, --privateKey [value]', 'mandatory - your ed25519 validator private key on legalerBC')
     .option('-c, --contract [address]', 'mandatory - election contract address')
-    .option('-w, --provider [url]', 'mandatory - Url to the ethereum node')
+    .option('-w, --provider [url]', 'mandatory - WebSocketUrl to the local ethereum node')
     .option('-l, --legalerNode [url]', 'mandatory - Url to the Legaler node')
-    .option('-b, --blocknumber', 'mandatory - Starting block of event listening')
+    .option('-b, --blocknumber [value]', 'mandatory - Starting block of event listening')
     .parse(process.argv);
 
-if (!program.publicKey || !program.contract || !program.provider) {
+if (!program.privateKey || !program.contract || !program.provider || !program.from) {
     console.log('Something is mising!');
     console.log('  Try: $ cycle --help');
-} else if (!validations.validatePublicKey(program.publicKey)) {
-    console.log('Bad public key!');
+} else if (!validations.validateCosmosPrivateKey(program.privateKey)) {
+    console.log('Bad private key!');
     console.log('  Try: $ cycle --help');
 } else if (!validations.validateAddr(program.contract)) {
     console.log('Not ethereum account!');
@@ -36,5 +38,6 @@ if (!program.publicKey || !program.contract || !program.provider) {
     console.log('  Try: $ cycle --help');
 } else {
     watcher.initializeWatcher(program.provider, program.contract);
-    watcher.start(program.publicKey, program.legalerNode, program.blocknumber, program.contract, program.provider);
+    hash.initializeProviders(program.provider);
+    watcher.start(program.from, program.privateKey, program.legalerNode, program.blocknumber, program.contract, program.provider);
 }
