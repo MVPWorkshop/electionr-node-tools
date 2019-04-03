@@ -27,10 +27,10 @@ if (!program.contract || !program.provider || !program.blocknumber) {
     console.log('Something is missing!');
     console.log('  Try: $ miner --help');
 } else {
-    initGenesis(program.provider, program.contract, program.blocknumber);
+    init_genesis(program.provider, program.contract, program.blocknumber);
 }
 
-async function initGenesis(provider, contract, blocknumber) {
+async function init_genesis(provider, contract, blocknumber) {
     watcher.initializeWatcher(provider, contract);
 
     await watcher.checkIfGenesis(blocknumber);

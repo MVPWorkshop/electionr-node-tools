@@ -13,7 +13,8 @@ module.exports = {
     publish,
     initializeProviders,
     checkIfExists,
-    getBlockTS
+    getBlockTS,
+    disconnectProviders
 };
 
 function initializeProviders(provider, contract) {
@@ -68,7 +69,7 @@ async function sendRawTx (privateKey, contract, chainId, gasPrice, data) {
         nonce: nonce,
         data: data,
         gasPrice: gasPrice,
-        gasLimit: 8000000
+        gasLimit: 6721974
     });
 
     return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
@@ -78,4 +79,8 @@ async function publish(methodName, privateKey, contract, gasPrice, chainId) {
     const data = electionContract.methods[methodName]().encodeABI();
 
     return sendRawTx(privateKey, contract, chainId, gasPrice, data)
+}
+
+function disconnectProviders() {
+    // TODO: close connection
 }

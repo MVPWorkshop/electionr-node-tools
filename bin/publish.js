@@ -9,7 +9,7 @@ const {
 
 program
     .version('0.0.1', '-v, --version')
-    .option('-s, --privateKey [value]', 'mandatory - Private key for sending tx to ethereum blockchain')
+    .option('-p, --privateKey [value]', 'mandatory - Private key for sending tx to ethereum blockchain')
     .option('-w, --provider [url]', 'mandatory - URL to the ethereum node')
     .option('--chainId [value]', 'mandatory - Chain Identifier of ethereum node')
     .option('-g, --gasPrice [value]', 'mandatory - How fast ethereum transaction will follow though')
@@ -37,12 +37,13 @@ if (!program.contract || !program.privateKey || !program.provider || !program.ga
 } else {
     transactions.initializeProviders(program.provider, program.contract);
     transactions.publish(
-        'publishGenesisSigs',
+        'publishSigs',
         program.privateKey,
         program.contract,
         program.gasPrice,
         program.chainId
     ).then((tx) => {
-
+        console.log('Transaction sent to the blockchain with hash: ', tx.transactionHash);
+        transactions.disconnectProviders();
     });
 }

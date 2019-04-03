@@ -15,12 +15,15 @@
   "homepage": "https://github.com/MVPWorkshop/legaler-node-tools#readme",
   "dependencies": {
     "axios": "0.18.0",
+    "bech32": "^1.1.3",
     "better-queue": "3.8.10",
+    "big-number": "^2.0.0",
     "bignumber.js": "8.0.2",
     "commander": "2.19.0",
     "ethereumjs-abi": "0.6.6",
     "shelljs": "0.8.3",
     "stellar-base": "0.10.0",
+    "superfeedr": "^0.2.0",
     "url": "0.11.0",
     "web3": "1.0.0-beta.37",
     "winston": "3.2.0"

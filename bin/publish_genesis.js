@@ -4,12 +4,13 @@ const program = require('commander');
 
 const {
     validations,
-    transactions
+    transactions,
+    logger
 } = require('../utils');
 
 program
     .version('0.0.1', '-v, --version')
-    .option('-p, --privateKey [value]', 'mandatory - Private key for sending tx to ethereum blockchain')
+    .option('-s, --privateKey [value]', 'mandatory - Private key for sending tx to ethereum blockchain')
     .option('-w, --provider [url]', 'mandatory - URL to the ethereum node')
     .option('--chainId [value]', 'mandatory - Chain Identifier of ethereum node')
     .option('-g, --gasPrice [value]', 'mandatory - How fast ethereum transaction will follow though')
@@ -37,12 +38,13 @@ if (!program.contract || !program.privateKey || !program.provider || !program.ga
 } else {
     transactions.initializeProviders(program.provider, program.contract);
     transactions.publish(
-        'publishSigs',
+        'publishGenesisSigs',
         program.privateKey,
         program.contract,
         program.gasPrice,
         program.chainId
     ).then((tx) => {
-        console.log(tx)
+        logger.info('Transaction sent to the blockchain with hash: ', tx.transactionHash);
+        transactions.disconnectProviders();
     });
 }

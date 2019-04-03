@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const program = require('commander');
-
+const bech32 = require('bech32');
 
 const {
     hash,
@@ -55,6 +55,8 @@ if (!program.consensusPublicKey || !program.contract || !program.time || !progra
     console.log('Bad hash!');
     console.log('  Try: $ miner --help');
 } else {
+    program.operatorAddress = '0x' + Buffer.from(bech32.fromWords(bech32.decode(program.operatorAddress).words)).toString('hex');
+    program.consensusPublicKey = '0x' + Buffer.from(bech32.fromWords(bech32.decode(program.consensusPublicKey).words)).toString('hex').substr(10);
     hash.initializeProviders(program.provider);
     transactions.initializeProviders(program.provider, program.contract);
     startMining(program.privateKey, program.consensusPublicKey, program.operatorAddress, program.nonce, program.contract, program.time, program.gasPrice, program.hash, program.chainId);
