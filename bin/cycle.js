@@ -11,10 +11,10 @@ const {
 program
     .version('0.0.1', '-v, --version')
     .option('-f, --from [value]', 'mandatory - your account key e.g. "cosmos..."')
-    .option('-p, --privateKey [value]', 'mandatory - your ed25519 validator private key on legalerBC')
+    .option('-p, --privateKey [value]', 'mandatory - your ed25519 validator private key on electionrBC')
     .option('-c, --contract [address]', 'mandatory - election contract address')
     .option('-w, --provider [url]', 'mandatory - WebSocketUrl to the local ethereum node')
-    .option('-l, --legalerNode [url]', 'mandatory - Url to the Legaler node')
+    .option('-l, --electionrNode [url]', 'mandatory - Url to the Electionr node')
     .option('-b, --blocknumber [value]', 'mandatory - Starting block of event listening')
     .parse(process.argv);
 
@@ -30,7 +30,7 @@ if (!program.privateKey || !program.contract || !program.provider || !program.fr
 } else if (!validations.validateProvider(program.provider)) {
     console.log('Bad provider url!');
     console.log('  Try: $ cycle --help');
-} else if (!validations.validateProvider(program.legalerNode)) {
+} else if (!validations.validateProvider(program.electionrNode)) {
     console.log('Bad provider url!');
     console.log('  Try: $ cycle --help');
 } else if (!validations.validateNumber(program.blocknumber)) {
@@ -39,5 +39,5 @@ if (!program.privateKey || !program.contract || !program.provider || !program.fr
 } else {
     watcher.initializeWatcher(program.provider, program.contract);
     hash.initializeProviders(program.provider);
-    watcher.start(program.from, program.privateKey, program.legalerNode, program.blocknumber, program.contract, program.provider);
+    watcher.start(program.from, program.privateKey, program.electionrNode, program.blocknumber, program.contract, program.provider);
 }
