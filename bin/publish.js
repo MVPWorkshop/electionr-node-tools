@@ -43,7 +43,7 @@ if (!program.contract || !program.privateKey || !program.provider || !program.ga
         program.gasPrice,
         program.chainId
     ).then((tx) => {
-        console.log('Transaction sent to the blockchain with hash: ', tx.transactionHash);
+        logger.info('Transaction sent to the blockchain with hash: ', tx.transactionHash);
         transactions.disconnectProviders();
     });
 }

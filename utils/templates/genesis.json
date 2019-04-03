@@ -1,6 +1,6 @@
 {
-  "genesis_time": "",
-  "chain_id": "",
+  "genesis_time": "2019-01-30T11:52:18.7266656Z",
+  "chain_id": "legaler-chain",
   "consensus_params": {
     "block_size": {
       "max_bytes": "22020096",
@@ -16,29 +16,248 @@
     }
   },
   "app_state": {
-    "stake": {
+    "accounts": [
+      {
+        "address": "cosmos19lp7txyc92stvhqmk26lzeyy07j5vt73legtzj",
+        "coins": [
+          {
+            "denom": "stakecoin",
+            "amount": "5000000"
+          }
+        ],
+        "account_number": "1"
+      },
+      {
+        "address": "cosmos1ge5t2s0k78y4zws2gpv5wsa0dw83fmflcpw0qn",
+        "coins": [
+          {
+            "denom": "stakecoin",
+            "amount": "1000000"
+          }
+        ],
+        "account_number": "2"
+      },
+      {
+        "address": "cosmos14l0n0qwhkf7p5uvuraeyvxmks5n8yt3f9vq462",
+        "coins": [
+          {
+            "denom": "stakecoin",
+            "amount": "1000000"
+          }
+        ],
+        "account_number": "3"
+      }
+    ],
+    "auth": {
+      "collected_fees": null,
+      "params": {
+        "max_memo_characters": "256",
+        "tx_sig_limit": "7",
+        "tx_size_cost_per_byte": "10",
+        "sig_verify_cost_ed25519": "590",
+        "sig_verify_cost_secp256k1": "1000"
+      }
+    },
+    "bank": {
+      "send_enabled": true
+    },
+    "staking": {
       "pool": {
-        "not_bonded_tokens": "20000000",
+        "not_bonded_tokens": "13000000",
         "bonded_tokens": "0"
       },
       "params": {
-        "unbonding_time": "259200000000000",
-        "max_validators": 91,
-        "bond_denom": "lglr"
+        "unbonding_time": "300000000000",
+        "max_validators": 3,
+        "max_entries": 7,
+        "bond_denom": "stakecoin"
       },
       "validators": [
         {
           "operator_address" : "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
           "consensus_pubkey": "cosmosvalconspub1zcjduepqyvatyxt7u4ztzrh0pcfpqmsm67k04ul72jl2rsn9kn4t5zj6gazspraavn",
           "jailed": false,
-          "tokens": "3000000"
+          "status": 0,
+          "tokens": "5000000",
+          "delegator_shares": "1",
+          "description": {
+            "moniker": "node0"
+          },
+          "commission": {
+            "rate": "0",
+            "max_rate": "0",
+            "max_rate_change": "0"
+          }
+        },
+        {
+          "operator_address" : "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "consensus_pubkey": "cosmosvalconspub1zcjduepqxlrvd3axqxl00m4kpywc9jrr7yzgz0m60ytzw4eqm2r8e8nts9lqy2u80n",
+          "jailed": false,
+          "status": 0,
+          "tokens": "1000000",
+          "delegator_shares": "1",
+          "description": {
+            "moniker": "node1"
+          },
+          "commission": {
+            "rate": "0",
+            "max_rate": "0",
+            "max_rate_change": "0"
+          }
         }
       ],
+      "delegations": [
+        {
+          "delegator_address": "cosmos1ge5t2s0k78y4zws2gpv5wsa0dw83fmflcpw0qn",
+          "validator_address": "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
+          "shares": "0"
+        },
+        {
+          "delegator_address": "cosmos14l0n0qwhkf7p5uvuraeyvxmks5n8yt3f9vq462",
+          "validator_address": "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "shares": "0"
+        }
+      ],
+      "last_total_power": "0",
+      "last_validator_powers": null,
+      "unbonding_delegations": null,
+      "redelegations": null,
       "exported": false
     },
-    "mint": {
+    "distr": {
+      "fee_pool": {
+        "community_pool": null
+      },
+      "community_tax": "0",
+      "base_proposer_reward": "0",
+      "bonus_proposer_reward": "0",
+      "withdraw_addr_enabled": true,
+      "delegator_withdraw_infos": [],
+      "previous_proposer": "",
+      "validator_accumulated_commissions": [],
+      "validator_current_rewards": [
+        {
+          "validator_address": "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
+          "rewards": {
+            "rewards": [{
+              "denom": "stakecoin",
+              "amount": "0"
+            }],
+            "period": "0"
+          }
+        },
+        {
+          "validator_address": "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "rewards": {
+            "rewards": [{
+              "denom": "stakecoin",
+              "amount": "0"
+            }],
+            "period": "0"
+          }
+        }
+      ],
+      "delegator_starting_infos": 
+      [
+        {
+          "delegator_address": "cosmos1ge5t2s0k78y4zws2gpv5wsa0dw83fmflcpw0qn",
+          "validator_address": "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
+          "starting_info": {
+            "previous_period": "0",
+            "stake": "0",
+            "height": "0"
+          }
+        },
+        {
+          "delegator_address": "cosmos14l0n0qwhkf7p5uvuraeyvxmks5n8yt3f9vq462",
+          "validator_address": "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "starting_info": {
+            "previous_period": "0",
+            "stake": "0",
+            "height": "0"
+          }
+        }
+      ],
+      "validator_historical_rewards": [
+        {
+          "validator_address": "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
+          "period": "0",
+          "rewards": {
+            "cumulative_reward_ratio": [{
+              "denom": "stakecoin",
+              "amount": "0"
+            }],
+            "reference_count": 2
+          }
+        },
+        {
+          "validator_address": "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "period": "0",
+          "rewards": {
+            "cumulative_reward_ratio": [{
+              "denom": "stakecoin",
+              "amount": "0"
+            }],
+            "reference_count": 2
+          }
+        }
+      ],
+      "outstanding_rewards": [
+        {
+          "validator_address": "cosmosvaloper1ge5t2s0k78y4zws2gpv5wsa0dw83fmfla466vq",
+          "outstanding_rewards": [{
+            "denom": "stakecoin",
+            "amount": "0"
+          }]
+        }, {
+          "validator_address": "cosmosvaloper14l0n0qwhkf7p5uvuraeyvxmks5n8yt3fqc5qke",
+          "outstanding_rewards": [{
+            "denom": "stakecoin",
+            "amount": "0"
+          }]
+        }
+      ],
+      "validator_slash_events": []
+    },
+    "slashing": {
       "params": {
-        "mint_denom": "lglr"
+        "max_evidence_age": "120000000000",
+        "signed_blocks_window": "5000",
+        "min_signed_per_window": "0.050000000000000000",
+        "downtime_jail_duration": "600000000000",
+        "slash_fraction_double_sign": "0.050000000000000000",
+        "slash_fraction_downtime": "0.010000000000000000"
+      },
+      "signing_infos": {
+        "cosmosvalcons1ge5t2s0k78y4zws2gpv5wsa0dw83fmflfxfxqp": {
+            "start_height": "1",
+            "index_offset": "0",
+            "tombstoned": false,
+            "missed_blocks_counter": "0",
+            "jailed_until": null
+        },
+        "cosmosvalcons14l0n0qwhkf7p5uvuraeyvxmks5n8yt3f5t8u6c": {
+            "start_height": "1",
+            "index_offset": "0",
+            "tombstoned": false,
+            "missed_blocks_counter": "0",
+            "jailed_until": null
+        }
+      },
+      "missed_blocks": {}
+    },
+    "mint": {
+      "minter": {
+        "inflation": "2",
+        "annual_provisions": "0.000000000000000000"
+      },
+      "params": {
+        "mint_denom": "stakecoin",
+        "inflation_rate_change": "0.130000000000000000",
+        "inflation_max": "0.200000000000000000",
+        "inflation_min": "0.070000000000000000",
+        "goal_bonded": "0.670000000000000000",
+        "blocks_per_year": "100"
       }
     }
   }
